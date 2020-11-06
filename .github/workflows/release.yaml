@@ -95,9 +95,16 @@ jobs:
       - name: copy binary if windows
         if: matrix.config.os == 'windows-latest'
         run: |
-          Get-ChildItem -Path target\${{ matrix.config.target }}\release
-          Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.lib -Destination dist\iohk_wallet; Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.dll -Destination dist\iohk_wallet
-      
+          Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.dll* -Destination dist\iohk_wallet
+          if ( "${{ matrix.config.target }}" -eq "stable-x86_64-pc-windows-gnu" )
+          {
+            Copy-Item target\${{ matrix.config.target }}\release\libjormungandrwallet.* -Destination dist\iohk_wallet
+          }
+          else
+          {
+            Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.lib -Destination dist\iohk_wallet
+          }
+
       - name: Get tag version
         id: get_version
         run: echo ::set-output name=VERSION::``${GITHUB_REF#refs/tags/}``
