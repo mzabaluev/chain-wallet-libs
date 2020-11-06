@@ -94,7 +94,9 @@ jobs:
         run: find ./target/${{ matrix.config.target }}/release -maxdepth 1 '(' -name "libjormungandrwallet.so" -o -name "libjormungandrwallet.a" ')' -exec cp {} dist/iohk_wallet/lib \;
       - name: copy binary if windows
         if: matrix.config.os == 'windows-latest'
-        run: Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.lib -Destination dist\iohk_wallet; Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.dll -Destination dist\iohk_wallet
+        run: |
+          Get-ChildItem -Path target\${{ matrix.config.target }}\release
+          Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.lib -Destination dist\iohk_wallet; Copy-Item target\${{ matrix.config.target }}\release\jormungandrwallet.dll -Destination dist\iohk_wallet
       
       - name: Get tag version
         id: get_version
